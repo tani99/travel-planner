@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "expo": "~49.0.10",
-    "expo-auth-session": "~5.0.4",
+    "expo-auth-session": "~5.5.2",
     "firebase": "^9.6.11",
     "react": "18.2.0",
     "react-dom": "18.2.0",
