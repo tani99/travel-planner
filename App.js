@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState }, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Platform,
+  Platform, Button,
   FlatList,
   Modal,
   TextInput,
@@ -11,10 +11,24 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from './firebaseConfig';
+import AuthScreen from './AuthScreen';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export default function App() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, setUser);
+    return unsubscribe;
+  }, []);
+
+  if (!user) {
+    return <AuthScreen />;
+  }
+
   const [trips, setTrips] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState('');
@@ -176,6 +190,7 @@ export default function App() {
       </Modal>
 
       <Text style={styles.platform}>Running on: {Platform.OS}</Text>
+      <Button title="Sign Out" onPress={() => signOut(auth)} />
     </View>
   );
 }
@@ -186,6 +201,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f8ff',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 20,
     paddingHorizontal: 20,
   },
   welcome: {
@@ -262,5 +278,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     marginTop: 10,
+    marginBottom: 20,
   },
 });
