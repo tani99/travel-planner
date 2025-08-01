@@ -1,0 +1,18 @@
+{
+  "name": "travel-planner",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "expo start",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "expo": "^53.0.20",
+    "metro": "0.82.3",
+    "react": "18.2.0",
+    "react-native": "0.72.4"
+  },
+  "overrides": {
+    "metro": "0.82.3"
+  }
+}
