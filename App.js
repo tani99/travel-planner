@@ -11,24 +11,34 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export default function App() {
   const [trips, setTrips] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
-  const [dates, setDates] = useState('');
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [showStartPicker, setShowStartPicker] = useState(false);
+  const [showEndPicker, setShowEndPicker] = useState(false);
   const [description, setDescription] = useState('');
+  const [selectedTrip, setSelectedTrip] = useState(null);
 
   const resetForm = () => {
     setName('');
     setLocation('');
-    setDates('');
+    setStartDate(null);
+    setEndDate(null);
     setDescription('');
   };
 
+  const formatDate = (date) =>
+    date ? date.toLocaleDateString() : '';
+
   const addTrip = () => {
-    if (!name || !location || !dates || !description) {
+    if (!name || !location || !startDate || !endDate || !description) {
       alert('Please fill in all fields');
       return;
     }
@@ -38,7 +48,8 @@ export default function App() {
         id: Date.now().toString(),
         name,
         location,
-        dates,
+        startDate,
+        endDate,
         description,
       },
     ]);
@@ -47,13 +58,31 @@ export default function App() {
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.tripItem}>
+    <TouchableOpacity
+      style={styles.tripItem}
+      onPress={() => setSelectedTrip(item)}
+    >
       <Text style={styles.tripName}>{item.name}</Text>
       <Text style={styles.tripDetail}>Location: {item.location}</Text>
-      <Text style={styles.tripDetail}>Dates: {item.dates}</Text>
-      <Text style={styles.tripDetail}>{item.description}</Text>
-    </View>
+      <Text style={styles.tripDetail}>
+        Dates: {formatDate(item.startDate)} - {formatDate(item.endDate)}
+      </Text>
+    </TouchableOpacity>
   );
+
+  if (selectedTrip) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.tripName}>{selectedTrip.name}</Text>
+        <Text style={styles.tripDetail}>Location: {selectedTrip.location}</Text>
+        <Text style={styles.tripDetail}>
+          Dates: {formatDate(selectedTrip.startDate)} - {formatDate(selectedTrip.endDate)}
+        </Text>
+        <Text style={styles.tripDetail}>{selectedTrip.description}</Text>
+        <Button title="Back" onPress={() => setSelectedTrip(null)} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -86,18 +115,46 @@ export default function App() {
             value={name}
             onChangeText={setName}
           />
-          <TextInput
-            placeholder="Location"
-            style={styles.input}
-            value={location}
-            onChangeText={setLocation}
+          <GooglePlacesAutocomplete
+            placeholder="Search location"
+            onPress={(data) => setLocation(data.description)}
+            query={{ key: 'YOUR_GOOGLE_API_KEY', language: 'en' }}
+            styles={{ textInput: styles.input }}
           />
-          <TextInput
-            placeholder="Dates"
+          <TouchableOpacity
             style={styles.input}
-            value={dates}
-            onChangeText={setDates}
-          />
+            onPress={() => setShowStartPicker(true)}
+          >
+            <Text>{startDate ? formatDate(startDate) : 'From Date'}</Text>
+          </TouchableOpacity>
+          {showStartPicker && (
+            <DateTimePicker
+              value={startDate || new Date()}
+              mode="date"
+              display="default"
+              onChange={(event, date) => {
+                setShowStartPicker(false);
+                if (date) setStartDate(date);
+              }}
+            />
+          )}
+          <TouchableOpacity
+            style={styles.input}
+            onPress={() => setShowEndPicker(true)}
+          >
+            <Text>{endDate ? formatDate(endDate) : 'To Date'}</Text>
+          </TouchableOpacity>
+          {showEndPicker && (
+            <DateTimePicker
+              value={endDate || new Date()}
+              mode="date"
+              display="default"
+              onChange={(event, date) => {
+                setShowEndPicker(false);
+                if (date) setEndDate(date);
+              }}
+            />
+          )}
           <TextInput
             placeholder="Description"
             style={[styles.input, styles.textArea]}
