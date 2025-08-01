@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "Travel Planner",
+    "slug": "travel-planner",
+    "version": "1.0.0",
+    "platforms": ["ios", "android"],
+    "orientation": "portrait",
+    "sdkVersion": "49.0.0"
+  }
+}

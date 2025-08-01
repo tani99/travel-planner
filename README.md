@@ -1,6 +1,7 @@
 # Travel Planner
 
-Travel Planner is an app designed to help individuals and groups organize trips. It aims to simplify planning by providing tools for building itineraries, coordinating with friends, and keeping track of tasks and budgets.
+Travel Planner is an app designed to help individuals and groups organize trips. It aims to simplify planning by providing tools
+ for building itineraries, coordinating with friends, and keeping track of tasks and budgets.
 
 ## Features
 - Plan solo or group trips
@@ -8,6 +9,14 @@ Travel Planner is an app designed to help individuals and groups organize trips.
 - Share plans and collaborate with friends
 - Track tasks, reservations, and budgets
 
+## Mobile App
+A basic React Native app is included with a single welcome screen. It can run on both iOS and Android using Expo.
+
+### Running the app
+```bash
+npm install # optional, installs dependencies
+npm start
+```
+
 ## Status
 This project is in early development. Contributions and ideas are welcome.
-
